@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shriya Pandit | Learning Experience Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --secondary: #6366f1;
+      --accent: #22c55e;
+      --dark: #0f172a;
+      --muted: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      color: var(--dark);
+    }
+
+    header {
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .intro h1 { color: var(--primary); margin-bottom: 0.25rem; }
+    .intro h2 { color: var(--secondary); margin-top: 0; font-weight: 500; }
+    .intro p { color: var(--muted); max-width: 720px; line-height: 1.7; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .stat {
+      background: white;
+      border-radius: 14px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      color: var(--primary);
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav li {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    nav li.active {
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 0.25rem;
+    }
+
+    section {
+      display: none;
+      max-width: 1000px;
+      margin: auto;
+      padding: 3rem 2rem;
+    }
+
+    section.active { display: block; }
+
+    h3 { margin-bottom: 0.5rem; }
+
+    .section-subline {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+    }
+
+    /* Icon chips for highlights */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: var(--primary);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Tech expertise icon animation + scale notes */
+    .expertise-item {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    section.active .expertise-item {
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    section.active .expertise-item:nth-child(1) { animation-delay: 0.05s; }
+    section.active .expertise-item:nth-child(2) { animation-delay: 0.12s; }
+    section.active .expertise-item:nth-child(3) { animation-delay: 0.18s; }
+
+    .expertise-title {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .expertise-scale {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .expertise-desc {
+      margin: 0.35rem 0 0.25rem;
+      line-height: 1.55;
+      color: var(--dark);
+    }
+
+    /* Icon bullet list for expertise descriptions */
+    .expertise-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.4rem 0 0.25rem;
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    .expertise-list li {
+      display: flex;
+      gap: 0.4rem;
+      align-items: flex-start;
+      font-size: 0.95rem;
+      color: var(--dark);
+    }
+
+    .expertise-list li span {
+      color: var(--primary);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .scale-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Business Impact – stream layout (no cards / no timeline) */
+    .impact-stream {
+      display: grid;
+      gap: 2.5rem;
+      max-width: 820px;
+    }
+
+    /* Feedback chat bubbles */
+    .feedback-stream {
+      display: grid;
+      gap: 1.5rem;
+      max-width: 820px;
+    }
+
+    .chat-bubble {
+      background: white;
+      padding: 1.25rem 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      position: relative;
+    }
+
+    .chat-bubble::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 18px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      transform: rotate(45deg);
+      box-shadow: -3px 3px 6px rgba(0,0,0,0.03);
+    }
+
+    .chat-bubble p {
+      margin: 0;
+      line-height: 1.6;
+      color: var(--dark);
+    }
+    .impact-stream {
+      display: grid;
+      gap: 2.5rem;
+      max-width: 820px;
+    }
+
+    .impact-block {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .impact-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .impact-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+    }
+    }
+
+    /* Career timeline styles */
+    .timeline {
+      position: relative;
+      margin-left: 1rem;
+      padding-left: 2rem;
+      border-left: 2px solid #e5e7eb;
+      display: grid;
+      gap: 2.5rem;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.1rem;
+      top: 0.4rem;
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+    }
+
+    .timeline-content h4 {
+      margin: 0;
+      color: var(--primary);
+    }
+
+    .timeline-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-content ul {
+      margin: 0.5rem 0 0;
+      padding-left: 1.1rem;
+    }
+
+    .timeline-content li {
+      margin-bottom: 0.4rem;
+      line-height: 1.5;
+    }
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="intro">
+    <h1>Shriya Pandit</h1>
+    <h2>Learning Experience Designer</h2>
+    <p style="font-size:1.05rem; line-height:1.8;">
+      I design <strong>impact-driven learning experiences</strong> that help people make better decisions at work.
+      With <strong>8+ years at Amazon</strong>, I bring a rare end-to-end perspective — from frontline operations
+      to mentoring, training, and enterprise-scale instructional design.
+      <br><br>
+      I specialize in translating <strong>complex business problems</strong> into <strong>engaging, data-backed digital learning</strong>
+      through scenarios, simulations, and blended journeys that scale globally and deliver measurable results.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><strong>8+</strong>Years Experience</div>
+      <div class="stat"><strong>4.8/5</strong>Learner Satisfaction<br><small><i>(avg)</i></small></div>
+      <div class="stat"><strong>150+</strong>Learning Modules</div>
+      <div class="stat"><strong>7000+</strong>Learners Impacted</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li class="active" onclick="showSection('journey', this)">Career Journey</li>
+    <li onclick="showSection('expertise', this)">Technology Expertise</li>
+    <li onclick="showSection('impact', this)">Impact</li>
+    <li onclick="showSection('samples', this)">Design Expertise</li>
+    <li onclick="showSection('work', this)">Sample Work</li>
+    <li onclick="showSection('feedback', this)">Feedback</li>
+    <li onclick="showSection('life', this)">Life Outside Work</li>
+  </ul>
+</nav>
+
+<section id="journey" class="active">
+  <h3>Career Journey</h3>
+  <p class="section-subline">From frontline operations to strategic learning design · Amazon growth journey</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h4>Learning Experience Designer</h4>
+        <span class="timeline-meta">Amazon Development Center · 2022 – Present</span>
+        <div class="chip-group">
+          <span class="chip">📦 150+ modules</span>
+          <span class="chip">👥 7k+ learners</span>
+        </div>
+        <ul>
+          <li>Designed 150+ scalable e‑learning modules using Storyline, Rise, Vyond, HTML/CSS, and AI‑assisted workflows</li>
+          <li>Translated complex business problems into scenario‑driven digital learning solutions</li>
+          <li>Partnered with SMEs, trainers, and stakeholders to deliver measurable performance outcomes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h4>Training Specialist</h4>
+        <span class="timeline-meta">Amazon Development Center · 2020 – 2022</span>
+        <div class="chip-group">
+          <span class="chip">🎓 Onboarding & certification</span>
+          <span class="chip">📈 Data-led improvements</span>
+        </div>
+        <ul>
+          <li>Led onboarding, certification, and advanced training programs for global teams</li>
+          <li>Conducted root‑cause analysis to continuously improve learning effectiveness</li>
+          <li>Enabled trainers and mentors through structured train‑the‑trainer programs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h4>Seller Support Associate → Mentor</h4>
+        <span class="timeline-meta">Amazon Development Center · 2017 – 2020</span>
+        <div class="chip-group">
+          <span class="chip">🏆 Top Tier performer</span>
+          <span class="chip">✅ 0% attrition</span>
+          <span class="chip">🎯 0% failure</span>
+        </div>
+        <ul>
+          <li>Recognized as a Top Tier performer while supporting high‑volume seller operations</li>
+          <li>Mentored multiple associate batches with 0% attrition and 0% performance failure</li>
+          <li>Served as acting advisor, managing live production teams and quality metrics</li>
+        </ul>
+      </div>
+    </div>
+
+  <div class="cards" style="margin-top:3rem;">
+    <div class="card">
+      <h4>Scholastic</h4>
+      <ul class="expertise-list">
+        <li><span>🎓</span><strong>Bachelor of Engineering (VTU)</strong> · East West Institute of Technology, Bengaluru<br><span class="scale-note">2013–2017 · 67%</span></li>
+        <li><span>📘</span><strong>Pre-University (12th Grade)</strong> · Surana Independent PU College, Basavanagudi, Bengaluru<br><span class="scale-note">2012–2013 · 70%</span></li>
+        <li><span>🏫</span><strong>CBSE – 10th Grade</strong> · Vidhyaniketan Public School, Ullal, Bengaluru<br><span class="scale-note">2010–2011 · GPA 8.0</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="expertise">
+  <h3>Technology Expertise</h3>
+  <p class="section-subline" style="font-size:1.02rem; line-height:1.75; max-width:820px;">
+    This is where <strong>design thinking meets execution</strong>. I use technology not as an end goal, but as a
+    <strong>strategic enabler</strong>—to build learning experiences that scale, adapt to real-world complexity,
+    and drive measurable performance outcomes. My expertise spans from <strong>scenario-driven design</strong>
+    to <strong>rapid, tool-enabled development</strong>, always grounded in data and learner behavior.
+  </p>
+
+  <ul style="list-style:none; padding:0; margin:0; display:grid; gap:1.5rem;">
+    <li class="expertise-item" style="display:flex; gap:1rem; align-items:flex-start;">
+      <span style="font-size:1.5rem;">🧠</span>
+      <div>
+        <div class="expertise-title">E‑Learning & Scenario Design <span class="expertise-scale">· Used at scale (7k+ learners)</span></div>
+        <ul class="expertise-list">
+          <li><span>🎯</span>Scenario‑based learning</li>
+          <li><span>🔀</span>Simulations</li>
+          <li><span>📝</span>Assessments</li>
+          <li><span>⚡</span>Microlearning design</li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="expertise-item" style="display:flex; gap:1rem; align-items:flex-start;">
+      <span style="font-size:1.5rem;">🛠</span>
+      <div>
+        <div class="expertise-title">Authoring & Development Tools <span class="expertise-scale">· Used at scale (150+ modules)</span></div>
+        <ul class="expertise-list">
+          <li><span>🛠</span>Articulate Storyline & Rise</li>
+          <li><span>🎬</span>Vyond (motion & explainer videos)</li>
+          <li><span>💻</span>HTML / CSS</li>
+          <li><span>🤖</span>AI‑assisted development workflows</li>
+          <li><span>🎨</span>Figma (design collaboration)</li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="expertise-item" style="display:flex; gap:1rem; align-items:flex-start;">
+      <span style="font-size:1.5rem;">📊</span>
+      <div>
+        <div class="expertise-title">Data‑Driven Learning Design <span class="expertise-scale">· Used at scale (global programs)</span></div>
+        <ul class="expertise-list">
+          <li><span>📊</span>Performance & quality metrics</li>
+          <li><span>🔍</span>Root‑cause analysis</li>
+          <li><span>🧠</span>Learner behavior analysis</li>
+          <li><span>📈</span>Data‑informed design decisions</li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<section id="impact">
+  <h3>Business Impact</h3>
+  <p class="section-subline">Capabilities · Leadership · Outcomes</p>
+
+  <div class="impact-stream">
+
+    <div class="impact-block">
+      <div class="impact-label">CORE COMPETENCIES</div>
+      <ul class="expertise-list">
+        <li><span>🧠</span><strong>Instructional Design:</strong> Scenario-based learning, interactive content, case studies, and assessment design</li>
+        <li><span>📊</span><strong>Data Analysis:</strong> Operational Mertics analysis, performance metrics evaluation, data-driven curriculum decisions</li>
+        <li><span>🗂</span><strong>Project Management:</strong> Managing multiple initiatives, cross-functional coordination, aggressive timelines</li>
+        <li><span>🤝</span><strong>Stakeholder Management:</strong> Trusted partner to trainers, operations, supervisors, and global teams</li>
+        <li><span>💻</span><strong>Technical Skills:</strong> ID tool usage,HTML-based interactions, tool simulations, accessible learner-centered design</li>
+        <li><span>✅</span><strong>Quality Focus:</strong> High-quality delivery with measurable performance and satisfaction gains</li>
+      </ul>
+    </div>
+
+    <div class="impact-divider"></div>
+
+    <div class="impact-block">
+      <div class="impact-label">PROFESSIONAL IMPACT</div>
+      <ul class="expertise-list">
+        <li><span>🌍</span>Designed and delivered programs impacting <strong>4,000+ associates globally</strong></li>
+        <li><span>⭐</span>Maintained <strong>90%+ End-of-Course satisfaction</strong></li>
+        <li><span>📈</span>Improved operational metrics by <strong>hundreds to thousands of basis points</strong></li>
+        <li><span>🎓</span>Achieved <strong>100% trainer effectiveness scores</strong></li>
+        <li><span>♻</span>Established sustainable frameworks for curriculum maintenance</li>
+        <li><span>🚀</span>Drove innovation through interactive, scenario-based learning</li>
+      </ul>
+    </div>
+
+    <div class="impact-divider"></div>
+
+    <div class="impact-block">
+      <div class="impact-label">LEADERSHIP & MENTORSHIP</div>
+      <ul class="expertise-list">
+        <li><span>👥</span><strong>Team Development:</strong> Built an apprenticeship program developing two Learning Experience Managers</li>
+        <li><span>🧩</span>Created a collaborative curriculum improvement framework</li>
+        <li><span>⏱</span>Led curriculum revamp cycles completed within <strong>4–6 weeks</strong></li>
+        <li><span>📣</span>Enabled career growth with one mentee promoted and another on track</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="samples">
+  <h3>Design Expertise</h3>
+  <p class="section-subline">Selected learning solutions · Story-first case studies · Hiring-manager friendly</p>
+
+  <div class="cards">
+    <div class="card">
+      <h4>Performance-Driven Decision-Making Scenario</h4>
+      <p><strong>Problem:</strong> New hires struggled to apply policies in real-time customer scenarios.</p>
+      <p><strong>Action:</strong> Designed a scenario-based Storyline simulation with branching decisions, feedback loops, and realistic case data.</p>
+      <p><strong>Result:</strong> Improved confidence and reduced early-stage errors during live customer interactions.</p>
+      <div class="chip-group">
+        <span class="chip">🧠 Judgment</span>
+        <span class="chip">🔀 Branching</span>
+        <span class="chip">📊 KPI-linked</span>
+      </div>
+      <p><em>Tools:</em> Articulate Storyline · Scenario mapping</p>
+      <p><em>Note:</em> Demo available on request (IP-safe / interview-only).</p>
+    </div>
+
+    <div class="card">
+      <h4>Global Onboarding Journey</h4>
+      <p><strong>Problem:</strong> Inconsistent onboarding experience across regions impacted time-to-productivity.</p>
+      <p><strong>Action:</strong> Built a blended onboarding journey combining Rise modules, short videos, and knowledge checks aligned to business KPIs.</p>
+      <p><strong>Result:</strong> Faster ramp-up and improved learner satisfaction across multiple cohorts.</p>
+      <div class="chip-group">
+        <span class="chip">🌍 Scale</span>
+        <span class="chip">🗺 Learning paths</span>
+        <span class="chip">⏱ Time-to-ramp</span>
+      </div>
+      <p><em>Tools:</em> Articulate Rise · Vyond</p>
+    </div>
+
+    <div class="card">
+      <h4>Data-Driven Skill Gap Intervention</h4>
+      <p><strong>Problem:</strong> Performance metrics highlighted recurring errors in specific workflows.</p>
+      <p><strong>Action:</strong> Conducted root-cause analysis and designed targeted microlearning modules and job aids.</p>
+      <p><strong>Result:</strong> Measurable reduction in error rates and improved quality scores.</p>
+      <div class="chip-group">
+        <span class="chip">📊 Analytics</span>
+        <span class="chip">🎯 Precision</span>
+        <span class="chip">📉 Defect reduction</span>
+      </div>
+      <p><em>Tools:</em> Data analysis · Microlearning</p>
+    </div>
+
+    <div class="card">
+      <h4>Scenario-Based Coaching Simulation</h4>
+      <p><strong>Problem:</strong> Knowledge decay and inconsistent coaching reduced performance quality.</p>
+      <p><strong>Action:</strong> Designed coaching simulations using role-play scenarios with guided feedback loops.</p>
+      <p><strong>Result:</strong> Improved coaching effectiveness and on-floor application.</p>
+      <div class="chip-group">
+        <span class="chip">🗣 Coaching</span>
+        <span class="chip">🎭 Role-play</span>
+        <span class="chip">🧩 Feedback loops</span>
+      </div>
+      <p><em>Tools:</em> Scenario design · Coaching frameworks</p>
+    </div>
+
+    <div class="card">
+      <h4>Creative Video & Microlearning</h4>
+      <p><strong>Problem:</strong> Long-form content reduced engagement and retention.</p>
+      <p><strong>Action:</strong> Designed short-form video and microlearning assets to reinforce key concepts.</p>
+      <p><strong>Result:</strong> Higher engagement and improved knowledge retention.</p>
+      <div class="chip-group">
+        <span class="chip">🎬 Motion</span>
+        <span class="chip">⚡ Microlearning</span>
+        <span class="chip">🧠 Retention</span>
+      </div>
+      <p><em>Tools:</em> Vyond · Microlearning strategy</p>
+    </div>
+  </div>
+</section>
+
+<section id="life">
+  <h3>Life Outside Work</h3>
+  <p class="section-subline">Creativity, expression, and conscious choices beyond the workplace</p>
+
+  <div class="cards">
+    <div class="card">
+      <h4>Creative Edge</h4>
+      <p>Professional dancer and stage performer with a strong sense of rhythm, storytelling, and audience engagement—skills that naturally translate into facilitation presence and learner engagement.</p>
+    </div>
+
+    <div class="card">
+      <h4>Stage & Hosting</h4>
+      <p>Freelance Master of Ceremony and theatre artist, experienced in live facilitation, cultural events, and creating inclusive, high-energy experiences for diverse audiences.</p>
+    </div>
+
+    <div class="card">
+      <h4>Giving Back to Nature</h4>
+      <p>I consciously try to reduce my environmental footprint through everyday choices and active participation in giving back to nature. This includes mindful consumption, waste reduction, and supporting sustainability-focused initiatives.</p>
+      <p class="scale-note">I believe small, consistent actions—when practiced collectively—can create meaningful, long-term impact for the environment.</p>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <h3>Sample Work</h3>
+  <p class="section-subline">Selected demonstrations of learning design and development</p>
+
+  <ul class="expertise-list">
+    <li><span>🔗</span><a href="sample-decision-simulation.html" target="_blank">Decision-Making Simulation (Storyline)</a></li>
+    <li><span>🔗</span><a href="sample-onboarding-journey.html" target="_blank">Global Onboarding Journey (Rise)</a></li>
+    <li><span>🔗</span><a href="sample-html-interaction.html" target="_blank">Interactive HTML Learning Module</a></li>
+  </ul>
+
+  <p class="scale-note">Note: Samples may open in a new tab or require access approval for IP protection.</p>
+</section>
+
+<section id="feedback">
+  <h3>Peer & Manager Feedback</h3>
+  <p class="section-subline">Unedited feedback from peers and managers</p>
+
+  <div class="feedback-stream">
+
+    <div class="chat-bubble">
+      <p>Shriya and I worked together on a very critical launch called SEND. Shriya's super power is her process knowledge and her attention to detail and being able to exceed on the support she provides on every change management project she participates. Her expertise make her a valued team member and his opinion must be taken into consideration to ensure a successful approach in delivering LXD projects. She was able to deliver this critical training for this launch on time and without any defect.</p>
+    </div>
+
+    <div class="chat-bubble">
+      <p>Shriya has accomplished a lot in 2023 and seeing her growth has been exciting. She is really good at focusing on driving the project to completion to deliver the product. She cares about stakeholders and delivery timelines. Can't wait to see what Shriya will accomplish in 2024.</p>
+    </div>
+
+    <div class="chat-bubble">
+      <p>Shriya is a team player and has been ready, willing and able to roll up her sleeves and assist with the development of training needed for the EMC program. She has not been afraid to brainstorm solutions and has developed several lessons while persevering through setbacks to deliver outstanding results.</p>
+    </div>
+
+    <div class="chat-bubble">
+      <p>Shriya is able to cross collaborate with other teams effectively to get tasks completed efficiently and within deadlines. She prioritizes accordingly and will apply fixes in situations where time can be critical. She always communicates when there are delays to tasks due to her own workload and sustains good inter personal work relationships to get task resolved.</p>
+    </div>
+
+    <div class="chat-bubble">
+      <p>Shriya is an amazing LXD with a shining spirit. She always brings a bright attitude and is ready to tackle any problem. She strives to go above and beyond what is expected and is not afraid to venture outside of her comfort zone. She's passionate about providing the best experience possible. It is a pleasure working with her.</p>
+    </div>
+
+    <div class="chat-bubble">
+      <p>Shriya really shines in her commitment to development. Shriya is eager for constructive feedback. This is a great strength to have as it ensures Shriya is always raising the bar on her own work. I have appreciated the coaching conversations and candid feedback exchanges Shriya and I have had. I observed a lot of technical growth in Q3 and Q4.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  © Shriya Pandit · Learning Experience Designer
+</footer>
+
+<script>
+  function showSection(sectionId, navItem) {
+    document.querySelectorAll('section').forEach(section => {
+      section.classList.remove('active');
+    });
+
+    const target = document.getElementById(sectionId);
+    if (target) target.classList.add('active');
+
+    document.querySelectorAll('nav li').forEach(li => {
+      li.classList.remove('active');
+    });
+
+    if (navItem) navItem.classList.add('active');
+  }
+
+  console.assert(typeof showSection === 'function', 'showSection should be defined');
+  console.assert(document.getElementById('journey'), 'Journey section should exist');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Aid Decision Challenge</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header {
+    background: linear-gradient(135deg, #306f80 0%, #4a8a9d 100%);
+    color: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 1.1em;
+    opacity: 0.95;
+}
+
+.progress-bar {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-text {
+    text-align: center;
+    color: #306f80;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.progress-track {
+    background-color: #e0e0e0;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, #306f80 0%, #4a8a9d 100%);
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.scenario-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.scenario-card.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.scenario-icon {
+    font-size: 4em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.scenario-title {
+    color: #306f80;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.scenario-description {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    line-height: 1.8;
+    font-size: 1.05em;
+    border-left: 4px solid #306f80;
+}
+
+.question {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.option {
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.option:hover {
+    border-color: #306f80;
+    background-color: #e8f4f8;
+    transform: translateX(5px);
+}
+
+.option.selected {
+    border-color: #306f80;
+    background-color: #e8f4f8;
+}
+
+.option.correct {
+    border-color: #28a745;
+    background-color: #d4edda;
+}
+
+.option.incorrect {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.option-label {
+    font-weight: 600;
+    color: #306f80;
+    margin-right: 10px;
+}
+
+.feedback {
+    display: none;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.7;
+}
+
+.feedback.show {
+    display: block;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+.feedback.correct {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+}
+
+.feedback.incorrect {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+.feedback-title {
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.feedback.correct .feedback-title {
+    color: #155724;
+}
+
+.feedback.incorrect .feedback-title {
+    color: #721c24;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #306f80 0%, #4a8a9d 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(48, 111, 128, 0.3);
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.results-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    display: none;
+}
+
+.results-card.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+.results-icon {
+    font-size: 5em;
+    margin-bottom: 20px;
+}
+
+.results-title {
+    color: #306f80;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.results-score {
+    font-size: 3em;
+    font-weight: 700;
+    color: #306f80;
+    margin-bottom: 20px;
+}
+
+.results-message {
+    font-size: 1.2em;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.score-breakdown {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.score-item:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.7em;
+    }
+    
+    .scenario-card {
+        padding: 25px;
+    }
+    
+    .buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🚑 First Aid Decision Challenge</h1>
+        <p>Test your emergency response skills with realistic scenarios</p>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress-text">Scenario <span id="current-scenario">1</span> of <span id="total-scenarios">5</span></div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </div>
+    
+    <!-- Scenario 1 -->
+    <div class="scenario-card active" id="scenario-1">
+        <div class="scenario-icon">🏃</div>
+        <h2 class="scenario-title">Scenario 1: Collapsed Runner</h2>
+        <div class="scenario-description">
+            You're at a community park when you see a runner suddenly collapse on the jogging path. As you approach, you notice the person is lying motionless on their back. Several bystanders are standing around looking concerned but no one has taken action yet.
+        </div>
+        <div class="question">What should be your FIRST action?</div>
+        <div class="options">
+            <div class="option" onclick="selectOption(1, 'A')">
+                <span class="option-label">A.</span> Immediately start chest compressions
+            </div>
+            <div class="option" onclick="selectOption(1, 'B')">
+                <span class="option-label">B.</span> Check if the scene is safe, then check for responsiveness
+            </div>
+            <div class="option" onclick="selectOption(1, 'C')">
+                <span class="option-label">C.</span> Call 911 and wait for paramedics to arrive
+            </div>
+            <div class="option" onclick="selectOption(1, 'D')">
+                <span class="option-label">D.</span> Give the person water and help them sit up
+            </div>
+        </div>
+        <div class="feedback" id="feedback-1"></div>
+        <div class="buttons">
+            <button class="btn btn-primary" id="submit-1" onclick="submitAnswer(1, 'B')" disabled>Submit Answer</button>
+        </div>
+    </div>
+    
+    <!-- Scenario 2 -->
+    <div class="scenario-card" id="scenario-2">
+        <div class="scenario-icon">🍽️</div>
+        <h2 class="scenario-title">Scenario 2: Restaurant Emergency</h2>
+        <div class="scenario-description">
+            You're dining at a restaurant when you hear a commotion at a nearby table. A woman is standing up, clutching her throat with both hands. Her face is turning red and she appears unable to speak or cough effectively. Her companion is calling for help.
+        </div>
+        <div class="question">What is the most appropriate immediate action?</div>
+        <div class="options">
+            <div class="option" onclick="selectOption(2, 'A')">
+                <span class="option-label">A.</span> Encourage her to keep coughing forcefully
+            </div>
+            <div class="option" onclick="selectOption(2, 'B')">
+                <span class="option-label">B.</span> Perform the Heimlich maneuver (abdominal thrusts)
+            </div>
+            <div class="option" onclick="selectOption(2, 'C')">
+                <span class="option-label">C.</span> Give her water to help wash down the obstruction
+            </div>
+            <div class="option" onclick="selectOption(2, 'D')">
+                <span class="option-label">D.</span> Lay her down and perform CPR
+            </div>
+        </div>
+        <div class="feedback" id="feedback-2"></div>
+        <div class="buttons">
+            <button class="btn btn-primary" id="submit-2" onclick="submitAnswer(2, 'B')" disabled>Submit Answer</button>
+        </div>
+    </div>
+    
+    <!-- Scenario 3 -->
+    <div class="scenario-card" id="scenario-3">
+        <div class="scenario-icon">🚗</div>
+        <h2 class="scenario-title">Scenario 3: Car Accident</h2>
+        <div class="scenario-description">
+            You witness a minor car accident. One driver exits their vehicle and appears shaken but uninjured. The other driver remains in their car, conscious but holding their neck and complaining of pain. They want to get out of the car to exchange insurance information.
+        </div>
+        <div class="question">What should you advise the injured driver to do?</div>
+        <div class="options">
+            <div class="option" onclick="selectOption(3, 'A')">
+                <span class="option-label">A.</span> Help them exit the vehicle carefully to assess injuries
+            </div>
+            <div class="option" onclick="selectOption(3, 'B')">
+                <span class="option-label">B.</span> Tell them to stay in the vehicle and call 911 immediately
+            </div>
+            <div class="option" onclick="selectOption(3, 'C')">
+                <span class="option-label">C.</span> Give them pain medication and help them walk around
+            </div>
+            <div class="option" onclick="selectOption(3, 'D')">
+                <span class="option-label">D.</span> Apply ice to their neck and let them rest in the car
+            </div>
+        </div>
+        <div class="feedback" id="feedback-3"></div>
+        <div class="buttons">
+            <button class="btn btn-primary" id="submit-3" onclick="submitAnswer(3, 'B')" disabled>Submit Answer</button>
+        </div>
+    </div>
+    
+    <!-- Scenario 4 -->
+    <div class="scenario-card" id="scenario-4">
+        <div class="scenario-icon">🔥</div>
+        <h2 class="scenario-title">Scenario 4: Kitchen Burn</h2>
+        <div class="scenario-description">
+            A coworker in the office kitchen accidentally spills boiling water on their hand and forearm. The affected area is bright red, extremely painful, and starting to blister. They're asking you what to do while someone else calls for medical help.
+        </div>
+        <div class="question">What is the best immediate first aid for this burn?</div>
+        <div class="options">
+            <div class="option" onclick="selectOption(4, 'A')">
+                <span class="option-label">A.</span> Apply ice directly to the burn to stop the pain
+            </div>
+            <div class="option" onclick="selectOption(4, 'B')">
+                <span class="option-label">B.</span> Apply butter or oil to protect the skin
+            </div>
+            <div class="option" onclick="selectOption(4, 'C')">
+                <span class="option-label">C.</span> Run cool (not cold) water over the burn for 10-20 minutes
+            </div>
+            <div class="option" onclick="selectOption(4, 'D')">
+                <span class="option-label">D.</span> Pop the blisters to release pressure and apply ointment
+            </div>
+        </div>
+        <div class="feedback" id="feedback-4"></div>
+        <div class="buttons">
+            <button class="btn btn-primary" id="submit-4" onclick="submitAnswer(4, 'C')" disabled>Submit Answer</button>
+        </div>
+    </div>
+    
+    <!-- Scenario 5 -->
+    <div class="scenario-card" id="scenario-5">
+        <div class="scenario-icon">🩸</div>
+        <h2 class="scenario-title">Scenario 5: Severe Bleeding</h2>
+        <div class="scenario-description">
+            During a workplace accident, a colleague sustains a deep cut on their forearm from broken glass. Blood is flowing steadily from the wound. You have access to a first aid kit with gloves, gauze, and bandages. The person is conscious and alert.
+        </div>
+        <div class="question">What is the most effective way to control this bleeding?</div>
+        <div class="options">
+            <div class="option" onclick="selectOption(5, 'A')">
+                <span class="option-label">A.</span> Apply a tourniquet immediately above the wound
+            </div>
+            <div class="option" onclick="selectOption(5, 'B')">
+                <span class="option-label">B.</span> Put on gloves, apply direct pressure with gauze, and elevate the arm
+            </div>
+            <div class="option" onclick="selectOption(5, 'C')">
+                <span class="option-label">C.</span> Clean the wound thoroughly with water before applying pressure
+            </div>
+            <div class="option" onclick="selectOption(5, 'D')">
+                <span class="option-label">D.</span> Apply pressure to the shoulder to cut off blood flow to the arm
+            </div>
+        </div>
+        <div class="feedback" id="feedback-5"></div>
+        <div class="buttons">
+            <button class="btn btn-primary" id="submit-5" onclick="submitAnswer(5, 'B')" disabled>Submit Answer</button>
+        </div>
+    </div>
+    
+    <!-- Results Card -->
+    <div class="results-card" id="results">
+        <div class="results-icon">🏆</div>
+        <h2 class="results-title">Challenge Complete!</h2>
+        <div class="results-score"><span id="final-score">0</span>/5</div>
+        <div class="results-message" id="results-message"></div>
+        <div class="score-breakdown">
+            <div class="score-item">
+                <span>Correct Answers:</span>
+                <span id="correct-count">0</span>
+            </div>
+            <div class="score-item">
+                <span>Incorrect Answers:</span>
+                <span id="incorrect-count">0</span>
+            </div>
+            <div class="score-item">
+                <span>Success Rate:</span>
+                <span id="success-rate">0%</span>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="restartChallenge()">Restart Challenge</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentScenario = 1;
+let totalScenarios = 5;
+let score = 0;
+let selectedAnswers = {};
+
+const correctAnswers = {
+    1: 'B',
+    2: 'B',
+    3: 'B',
+    4: 'C',
+    5: 'B'
+};
+
+const feedback = {
+    1: {
+        correct: "✅ Excellent! You correctly identified the first step in emergency response. Always ensure scene safety first, then check for responsiveness by tapping the person's shoulder and shouting 'Are you okay?' This follows the proper emergency response protocol before taking any other action.",
+        incorrect: "❌ Not quite. Before taking any action, you must first ensure the scene is safe for both you and the victim. Then check for responsiveness by tapping their shoulder and asking if they're okay. Only after confirming unresponsiveness should you call 911 and begin appropriate interventions like CPR if needed."
+    },
+    2: {
+        correct: "✅ Perfect! You recognized the universal choking sign (hands clutching throat) and inability to speak or cough effectively, indicating a complete airway obstruction. The Heimlich maneuver (abdominal thrusts) is the correct immediate intervention for a conscious choking adult. Continue until the object is expelled or the person becomes unconscious.",
+        incorrect: "❌ Incorrect. The woman is showing signs of severe/complete airway obstruction (universal choking sign, inability to speak or cough). This requires immediate action with the Heimlich maneuver. Encouraging coughing only works for mild obstruction. Never give water to a choking person, and CPR is only for unconscious victims."
+    },
+    3: {
+        correct: "✅ Correct! Neck pain after a car accident suggests possible spinal injury. Moving the person could cause permanent paralysis or death. The driver should remain still in the vehicle with their head and neck supported until emergency medical services arrive with proper equipment to safely immobilize and transport them.",
+        incorrect: "❌ Wrong approach. Neck pain following trauma suggests potential spinal injury. Moving the person could cause severe damage to the spinal cord, resulting in permanent paralysis. The injured driver should stay still, and 911 should be called immediately. Never move someone with suspected spinal injury unless there's immediate danger."
+    },
+    4: {
+        correct: "✅ Excellent choice! Running cool (not cold) water over the burn for 10-20 minutes is the gold standard first aid for burns. This helps stop the burning process, reduces pain, and minimizes tissue damage. After cooling, cover loosely with a clean, non-stick dressing. This is a second-degree burn requiring medical attention.",
+        incorrect: "❌ Incorrect. Never apply ice directly (causes tissue damage), butter/oil (traps heat), or pop blisters (increases infection risk). The correct first aid is to run cool (not cold) water over the burn for 10-20 minutes to stop the burning process and reduce damage. This second-degree burn needs medical evaluation."
+    },
+    5: {
+        correct: "✅ Perfect response! You followed the correct bleeding control protocol: protect yourself with gloves, apply direct pressure with gauze to the wound site, and elevate the injured area above heart level. This combination is effective for most bleeding situations. Maintain pressure and don't remove the gauze if it becomes soaked—add more on top.",
+        incorrect: "❌ Not the best approach. For most bleeding, direct pressure with elevation is most effective. Tourniquets are only for life-threatening limb bleeding when direct pressure fails. Don't waste time cleaning the wound initially—stop the bleeding first. Pressure points are secondary measures. Always wear gloves for protection."
+    }
+};
+
+function selectOption(scenario, option) {
+    const options = document.querySelectorAll(`#scenario-${scenario} .option`);
+    options.forEach(opt => opt.classList.remove('selected'));
+    
+    event.target.closest('.option').classList.add('selected');
+    selectedAnswers[scenario] = option;
+    document.getElementById(`submit-${scenario}`).disabled = false;
+}
+
+function submitAnswer(scenario, correctAnswer) {
+    const selectedAnswer = selectedAnswers[scenario];
+    const feedbackDiv = document.getElementById(`feedback-${scenario}`);
+    const submitBtn = document.getElementById(`submit-${scenario}`);
+    const options = document.querySelectorAll(`#scenario-${scenario} .option`);
+    
+    options.forEach(opt => {
+        opt.style.cursor = 'default';
+        opt.onclick = null;
+    });
+    
+    options.forEach(opt => {
+        const optionLetter = opt.querySelector('.option-label').textContent.replace('.', '');
+        if (optionLetter === correctAnswer) {
+            opt.classList.add('correct');
+        } else if (optionLetter === selectedAnswer && selectedAnswer !== correctAnswer) {
+            opt.classList.add('incorrect');
+        }
+    });
+    
+    const isCorrect = selectedAnswer === correctAnswer;
+    if (isCorrect) {
+        score++;
+        feedbackDiv.className = 'feedback correct show';
+        feedbackDiv.innerHTML = `<div class="feedback-title">Correct!</div><p>${feedback[scenario].correct}</p>`;
+    } else {
+        feedbackDiv.className = 'feedback incorrect show';
+        feedbackDiv.innerHTML = `<div class="feedback-title">Incorrect</div><p>${feedback[scenario].incorrect}</p>`;
+    }
+    
+    submitBtn.textContent = scenario < totalScenarios ? 'Next Scenario' : 'View Results';
+    submitBtn.onclick = () => nextScenario(scenario);
+}
+
+function nextScenario(current) {
+    document.getElementById(`scenario-${current}`).classList.remove('active');
+    
+    if (current < totalScenarios) {
+        currentScenario = current + 1;
+        document.getElementById(`scenario-${currentScenario}`).classList.add('active');
+        
+        document.getElementById('current-scenario').textContent = currentScenario;
+        const progressPercent = (currentScenario / totalScenarios) * 100;
+        document.getElementById('progress-fill').style.width = progressPercent + '%';
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    const resultsCard = document.getElementById('results');
+    const progressBar = document.querySelector('.progress-bar');
+    
+    progressBar.style.display = 'none';
+    
+    const correctCount = score;
+    const incorrectCount = totalScenarios - score;
+    const successRate = Math.round((score / totalScenarios) * 100);
+    
+    document.getElementById('final-score').textContent = score;
+    document.getElementById('correct-count').textContent = correctCount;
+    document.getElementById('incorrect-count').textContent = incorrectCount;
+    document.getElementById('success-rate').textContent = successRate + '%';
+    
+    let message = '';
+    if (score === 5) {
+        message = "Outstanding! You demonstrated excellent emergency response knowledge. You're well-prepared to handle first aid situations confidently and effectively.";
+    } else if (score >= 4) {
+        message = "Great job! You have a strong understanding of first aid principles. Review the scenarios you missed to further strengthen your emergency response skills.";
+    } else if (score >= 3) {
+        message = "Good effort! You have a solid foundation, but there's room for improvement. Review the feedback for each scenario to enhance your first aid knowledge.";
+    } else {
+        message = "Keep learning! First aid skills take practice. Review the correct responses and their explanations, then try the challenge again to improve your score.";
+    }
+    
+    document.getElementById('results-message').textContent = message;
+    resultsCard.classList.add('show');
+}
+
+function restartChallenge() {
+    currentScenario = 1;
+    score = 0;
+    selectedAnswers = {};
+    
+    for (let i = 1; i <= totalScenarios; i++) {
+        const scenario = document.getElementById(`scenario-${i}`);
+        const options = scenario.querySelectorAll('.option');
+        const feedback = document.getElementById(`feedback-${i}`);
+        const submitBtn = document.getElementById(`submit-${i}`);
+        
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+            opt.style.cursor = 'pointer';
+            opt.onclick = () => selectOption(i, opt.querySelector('.option-label').textContent.replace('.', ''));
+        });
+        
+        feedback.className = 'feedback';
+        feedback.innerHTML = '';
+        
+        submitBtn.textContent = 'Submit Answer';
+        submitBtn.disabled = true;
+        submitBtn.onclick = () => submitAnswer(i, correctAnswers[i]);
+        
+        scenario.classList.remove('active');
+    }
+    
+    document.getElementById('scenario-1').classList.add('active');
+    document.getElementById('current-scenario').textContent = '1';
+    document.getElementById('progress-fill').style.width = '20%';
+    document.querySelector('.progress-bar').style.display = 'block';
+    document.getElementById('results').classList.remove('show');
+}
+
+document.getElementById('progress-fill').style.width = '20%';
+</script>
+
+</body>
+</html>
+

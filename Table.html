@@ -1,0 +1,217 @@
+<style>
+  .storyboard-wrapper {
+    max-width: 1000px;
+    margin: 40px auto;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  }
+
+  .storyboard-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .storyboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .storyboard-table th,
+  .storyboard-table td {
+    padding: 16px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .storyboard-table th {
+    background: #6366f1;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .storyboard-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .shot {
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #eef2ff;
+    color: #4338ca;
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .storyboard-table thead {
+      display: none;
+    }
+
+    .storyboard-table,
+    .storyboard-table tbody,
+    .storyboard-table tr,
+    .storyboard-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .storyboard-table tr {
+      margin-bottom: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .storyboard-table td {
+      border-bottom: none;
+    }
+
+    .storyboard-table td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+      color: #6b7280;
+    }
+  }
+</style>
+
+<div class="storyboard-wrapper">
+  <div class="storyboard-title">
+    Visual Storyboard – Microlearning Simulation
+  </div>
+
+  <table class="storyboard-table">
+    <thead>
+      <tr>
+        <th>Shot</th>
+        <th>Visual</th>
+        <th>Text</th>
+        <th>Interaction</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 1</span><br>Opening Hook
+        </td>
+        <td data-label="Visual">
+          Card UI fades in over a soft gradient background. Progress bar starts empty.
+        </td>
+        <td data-label="Text">
+          “Learn this in under 2 minutes”
+        </td>
+        <td data-label="Interaction">
+          Card slides up slightly. Start button pulses once.
+        </td>
+      </tr>
+
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 2</span><br>Scenario Setup
+        </td>
+        <td data-label="Visual">
+          Customer avatar or chat bubble appears. Text types in.
+        </td>
+        <td data-label="Text">
+          Customer: “This product is too expensive.”
+        </td>
+        <td data-label="Interaction">
+          Typing animation with soft notification sound.
+        </td>
+      </tr>
+
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 3</span><br>Decision Point
+        </td>
+        <td data-label="Visual">
+          Two large buttons slide up from the bottom. Progress bar at 33%.
+        </td>
+        <td data-label="Text">
+          What should you do?<br>
+          • Explain features immediately<br>
+          • Acknowledge concern & ask a question
+        </td>
+        <td data-label="Interaction">
+          Hover / tap animation. User selects an option.
+        </td>
+      </tr>
+
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 4A</span><br>Correct Feedback
+        </td>
+        <td data-label="Visual">
+          Selected button glows green. Checkmark appears.
+        </td>
+        <td data-label="Text">
+          “Good choice! Empathy builds trust.”
+        </td>
+        <td data-label="Interaction">
+          Progress bar animates from 33% to 66%.
+        </td>
+      </tr>
+
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 4B</span><br>Incorrect Feedback
+        </td>
+        <td data-label="Visual">
+          Button shakes gently with muted red outline.
+        </td>
+        <td data-label="Text">
+          “Jumping to features may feel dismissive.”
+        </td>
+        <td data-label="Interaction">
+          Try-again prompt appears.
+        </td>
+      </tr>
+
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 5</span><br>Outcome
+        </td>
+        <td data-label="Visual">
+          Customer avatar relaxes. Background slightly brightens.
+        </td>
+        <td data-label="Text">
+          “Customer feels heard and stays engaged.”
+        </td>
+        <td data-label="Interaction">
+          Smooth text fade-in. Subtle UI glow.
+        </td>
+      </tr>
+
+      <tr>
+        <td class="shot" data-label="Shot">
+          <span class="badge">Shot 6</span><br>Completion
+        </td>
+        <td data-label="Visual">
+          Progress bar fills to 100%. Soft confetti animation.
+        </td>
+        <td data-label="Text">
+          🎉 Microlearning Complete<br>
+          “You handled the objection effectively.”
+        </td>
+        <td data-label="Interaction">
+          CTA buttons appear: Replay / Next Scenario / Tip Card.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
